@@ -3,7 +3,7 @@ require 'httparty'
 module ContactApiGem
  class Search
 
-  attr_accessor :status, :response, :message
+  attr_accessor :status, :message, :contacts
 
   def initialize(options = {})
     search(options)
@@ -13,7 +13,9 @@ module ContactApiGem
     http_response = HTTParty.get(ContactApiGem::BASE_URL, {query: options.merge(ContactApiGem::DEFAULT_PARAMS)})
     @status = http_response.code
     @message = http_response.message
-    @response = http_response.parsed_response
+    response = http_response.parsed_response
+    @contacts = ContactApiGem::Contact.proccess_batch(response['contacts'])
+
   end
 
   def success?
@@ -21,9 +23,9 @@ module ContactApiGem
   end
 
   # def get_names
-  #   response['contacts'].map do |r|
-  #     # {r['name'] => r["id"]} 
-  #     "Contact: #{r['name']}, id: #{r["id"]}"   
+  #   contacts.map do |contact|
+  #     # {contact['name'] => contact["id"]} 
+  #     # "Contact: #{contact.name}, id: #{contact.id}" 
   #   end
   # end
 

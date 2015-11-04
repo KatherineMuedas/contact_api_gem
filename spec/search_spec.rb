@@ -7,19 +7,19 @@ describe ContactApiGem::Search do
     #expect search to be a search object 
     expect(search).to be_a_kind_of(ContactApiGem::Search)
     #expect object to have attributes status and responses 
-    expect_attributes = %w(status response)
+    expect_attributes = %w(status message contacts)
     expect_attributes.each do |attribute|
       expect(search).to respond_to(attribute)
     end
-    #expect the status of the search to be succesful 
+    #expect the status of the search to be successful 
     expect(search.status).to eql(200)
     #expect that the response of the search return a list of contacts
-    expect(search.response)
-    expect(search.response["contacts"])
-    expect_response_attributes = %w(id name email twitter phone birthday relationship)
-    expect_response_attributes.each do |attribute|
-      expect(search.response["contacts"].first).to include(attribute)
+    expect(search.contacts)
+    expect(search.contacts).to be_a_kind_of(Array)
+    expect(search.contacts.first).to be_a_kind_of(ContactApiGem::Contact)
+    expect_contacts_attributes = %w(id name email twitter phone birthday relationship)
+    expect_contacts_attributes.each do |attribute|
+      expect(search.contacts.first).to respond_to(attribute)
     end
-    expect(expect_response_attributes.count).to eql(search.response["contacts"].first.count)
   end
 end
